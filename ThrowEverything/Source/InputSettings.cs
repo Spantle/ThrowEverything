@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 using UnityEngine.InputSystem;
 
 namespace ThrowEverything
 {
-    public class ThrowEverythingInputSettings : LcInputActions
+    internal class InputSettings : LcInputActions
     {
-        public static readonly ThrowEverythingInputSettings Instance = new ThrowEverythingInputSettings();
+        public static readonly InputSettings Instance = new();
 
         [InputAction("<Keyboard>/r", Name = "ThrowEverything: Throw Item")]
         public InputAction ThrowItem { get; set; }
