@@ -73,25 +73,20 @@ namespace ThrowEverything.Patches
         static bool FallWithCurve(GrabbableObject __instance)
         {
             // borrowed (and slightly modified) from lethal company
-            if (State.GetThrownItems().thrownItemsDict.ContainsKey(__instance.GetInstanceID()))
+            float magnitude = (__instance.startFallingPosition - __instance.targetFloorPosition).magnitude;
+            __instance.transform.rotation = Quaternion.Lerp(__instance.transform.rotation, Quaternion.Euler(__instance.itemProperties.restingRotation.x, __instance.transform.eulerAngles.y, __instance.itemProperties.restingRotation.z), 14f * Time.deltaTime / magnitude);
+            __instance.transform.localPosition = Vector3.Lerp(__instance.startFallingPosition, __instance.targetFloorPosition, FallCurve.fallCurve.Evaluate(__instance.fallTime));
+            if (magnitude > 5f)
             {
-                float magnitude = (__instance.startFallingPosition - __instance.targetFloorPosition).magnitude;
-                __instance.transform.rotation = Quaternion.Lerp(__instance.transform.rotation, Quaternion.Euler(__instance.itemProperties.restingRotation.x, __instance.transform.eulerAngles.y, __instance.itemProperties.restingRotation.z), 14f * Time.deltaTime / magnitude);
-                __instance.transform.localPosition = Vector3.Lerp(__instance.startFallingPosition, __instance.targetFloorPosition, FallCurve.fallCurve.Evaluate(__instance.fallTime));
-                if (magnitude > 5f)
-                {
-                    __instance.transform.localPosition = Vector3.Lerp(new Vector3(__instance.transform.localPosition.x, __instance.startFallingPosition.y, __instance.transform.localPosition.z), new Vector3(__instance.transform.localPosition.x, __instance.targetFloorPosition.y, __instance.transform.localPosition.z), FallCurve.verticalFallCurveNoBounce.Evaluate(__instance.fallTime));
-                }
-                else
-                {
-                    __instance.transform.localPosition = Vector3.Lerp(new Vector3(__instance.transform.localPosition.x, __instance.startFallingPosition.y, __instance.transform.localPosition.z), new Vector3(__instance.transform.localPosition.x, __instance.targetFloorPosition.y, __instance.transform.localPosition.z), FallCurve.verticalFallCurve.Evaluate(__instance.fallTime));
-                }
-                __instance.fallTime += Mathf.Abs(Time.deltaTime * 12f / magnitude);
-
-                return false;
+                __instance.transform.localPosition = Vector3.Lerp(new Vector3(__instance.transform.localPosition.x, __instance.startFallingPosition.y, __instance.transform.localPosition.z), new Vector3(__instance.transform.localPosition.x, __instance.targetFloorPosition.y, __instance.transform.localPosition.z), FallCurve.verticalFallCurveNoBounce.Evaluate(__instance.fallTime));
             }
+            else
+            {
+                __instance.transform.localPosition = Vector3.Lerp(new Vector3(__instance.transform.localPosition.x, __instance.startFallingPosition.y, __instance.transform.localPosition.z), new Vector3(__instance.transform.localPosition.x, __instance.targetFloorPosition.y, __instance.transform.localPosition.z), FallCurve.verticalFallCurve.Evaluate(__instance.fallTime));
+            }
+            __instance.fallTime += Mathf.Abs(Time.deltaTime * 12f / magnitude);
 
-            return true;
+            return false;
         }
     }
 }
