@@ -29,13 +29,23 @@ namespace ThrowEverything.Models
             return thrower;
         }
 
-        private void StartThrowing(CallbackContext ctx)
+        internal void StartThrowing(CallbackContext ctx)
         {
+            if (!Utils.CanUseItem(thrower))
+            {
+                Plugin.Logger.LogInfo("cannot use item");
+                return;
+            }
+
+            thrower.isGrabbingObjectAnimation = true;
+
             State.GetChargingThrow().StartCharging();
         }
 
-        private void Throw(CallbackContext ctx)
+        internal void Throw(CallbackContext ctx)
         {
+            thrower.isGrabbingObjectAnimation = false;
+
             if (item == null || item.playerHeldBy != thrower)
             {
                 Plugin.Logger.LogWarning($"tried to throw an invalid item {item == null}");
@@ -56,7 +66,6 @@ namespace ThrowEverything.Models
             ThrownItem thrownItem = new(item, item.playerHeldBy, chargeDecimal, markiplier);
             State.GetThrownItems().thrownItemsDict.Add(item.GetInstanceID(), thrownItem);
 
-
             item.playerHeldBy.DiscardHeldObject(placeObject: true, null, Utils.GetItemThrowDestination(thrownItem));
         }
 
@@ -70,6 +79,9 @@ namespace ThrowEverything.Models
         {
             InputSettings.Instance.ThrowItem.started -= StartThrowing;
             InputSettings.Instance.ThrowItem.canceled -= Throw;
+
+            // just in case
+            thrower.isGrabbingObjectAnimation = false;
         }
     }
 }

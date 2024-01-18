@@ -87,5 +87,36 @@ namespace ThrowEverything
         {
             return GetItemThrowDestination(thrownItem.GetItem(), thrownItem.GetThrower(), thrownItem.GetChargeDecimal());
         }
+
+        // borrowed from a private function in lethal company
+        internal static bool CanUseItem(PlayerControllerB player)
+        {
+            if ((!player.IsOwner || !player.isPlayerControlled || (player.IsServer && !player.isHostPlayerObject)) && !player.isTestingPlayer)
+            {
+                return false;
+            }
+
+            if (!player.isHoldingObject || player.currentlyHeldObjectServer == null)
+            {
+                return false;
+            }
+
+            if (player.quickMenuManager.isMenuOpen)
+            {
+                return false;
+            }
+
+            if (player.isPlayerDead)
+            {
+                return false;
+            }
+
+            if (!player.currentlyHeldObjectServer.itemProperties.usableInSpecialAnimations && (player.isGrabbingObjectAnimation || player.inTerminalMenu || player.isTypingChat || (player.inSpecialInteractAnimation && !player.inShockingMinigame)))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
