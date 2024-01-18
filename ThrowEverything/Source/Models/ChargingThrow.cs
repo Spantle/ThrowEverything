@@ -1,7 +1,10 @@
-﻿using System;
+﻿using GameNetcodeStuff;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ThrowEverything.Patches;
+using UnityEngine;
 
 namespace ThrowEverything.Models
 {
@@ -18,6 +21,8 @@ namespace ThrowEverything.Models
 
         internal bool hasFullyCharged = false;
 
+        GameObject preview;
+
         internal void StartCharging()
         {
             isCharging = true;
@@ -32,6 +37,8 @@ namespace ThrowEverything.Models
             isCharging = false;
             hasRunOutOfStamina = false;
             hasFullyCharged = false;
+
+            UnityEngine.Object.Destroy(preview);
         }
 
         internal void Exhausted()
@@ -72,6 +79,24 @@ namespace ThrowEverything.Models
         internal int GetChargedPercentage()
         {
             return (int)Math.Floor(GetChargeDecimal() * 100);
+        }
+
+        internal void DrawLandingCircle()
+        {
+            if (preview == null)
+            {
+                preview = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                preview.layer = 6;
+                preview.GetComponent<Renderer>().material = ShipBuildModeManager.Instance.ghostObjectGreen;
+            }
+
+            Throwable throwable = State.GetHeldThrowable();
+            ChargingThrow chargingThrow = State.GetChargingThrow();
+            GrabbableObject item = throwable.GetItem();
+
+            float m = item.transform.localScale.magnitude;
+            preview.transform.localScale = new Vector3(m, m, m);
+            preview.transform.position = Utils.GetItemThrowDestination(item, throwable.GetThrower(), chargingThrow.GetChargeDecimal());
         }
     }
 }

@@ -24,6 +24,8 @@ namespace ThrowEverything.Patches
             ChargingThrow chargingThrow = State.GetChargingThrow();
             if (chargingThrow.isCharging)
             {
+                chargingThrow.DrawLandingCircle();
+
                 if (!chargingThrow.hasFullyCharged)
                 {
                     __instance.sprintMeter = Mathf.Clamp(__instance.sprintMeter - (0.01f / 4), 0f, 1f);

@@ -60,15 +60,12 @@ namespace ThrowEverything
             return landingRay.GetPoint(100f);
         }
 
-        internal static Vector3 GetItemThrowDestination(ThrownItem thrownItem)
+        internal static Vector3 GetItemThrowDestination(GrabbableObject item, PlayerControllerB thrower, float chargeDecimal)
         {
-            GrabbableObject item = thrownItem.GetItem();
-            PlayerControllerB player = thrownItem.GetThrower();
-
-            Ray throwRay = new(player.gameplayCamera.transform.position, player.gameplayCamera.transform.forward); // a ray from in front of the player
+            Ray throwRay = new(thrower.gameplayCamera.transform.position, thrower.gameplayCamera.transform.forward); // a ray from in front of the player
             RaycastHit hitInfo; // where the ray collides
             Vector3 destination;
-            float distance = ItemPower(item, thrownItem.GetChargeDecimal(), true) * 20;
+            float distance = ItemPower(item, chargeDecimal, true) * 20;
             Plugin.Logger.LogInfo($"throwing {Name(item)} ({item.itemProperties.weight}): {distance} units");
             if (Physics.Raycast(throwRay, out hitInfo, distance, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
             {
@@ -84,6 +81,11 @@ namespace ThrowEverything
             }
 
             return FindLandingRay(destination);
+        }
+
+        internal static Vector3 GetItemThrowDestination(ThrownItem thrownItem)
+        {
+            return GetItemThrowDestination(thrownItem.GetItem(), thrownItem.GetThrower(), thrownItem.GetChargeDecimal());
         }
     }
 }

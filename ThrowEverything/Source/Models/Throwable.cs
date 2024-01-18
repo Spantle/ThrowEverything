@@ -24,6 +24,11 @@ namespace ThrowEverything.Models
             return item;
         }
 
+        internal PlayerControllerB GetThrower()
+        {
+            return thrower;
+        }
+
         private void StartThrowing(CallbackContext ctx)
         {
             State.GetChargingThrow().StartCharging();
