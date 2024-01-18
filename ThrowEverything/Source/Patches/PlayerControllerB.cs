@@ -42,5 +42,23 @@ namespace ThrowEverything.Patches
                 chargingThrow.Exhausted();
             }
         }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(PlayerControllerB), "ScrollMouse_performed")]
+        static void ScrollMouse_performed(PlayerControllerB __instance)
+        {
+            if (State.GetChargingThrow().isCharging)
+            {
+                __instance.isGrabbingObjectAnimation = false; // put it back (hopefully to the way it was)
+            }
+
+            if (Utils.CanUseItem(__instance))
+            {
+                // even though switching items will probably run this, we do it just in case of a two handed item where you cannot switch items
+                GrabbableObject item = State.GetHeldThrowable().GetItem();
+                State.ClearHeldThrowable();
+                State.SetHeldThrowable(item);
+            }
+        }
     }
 }
