@@ -17,7 +17,12 @@ namespace ThrowEverything
 
                 string name = itemProperties.itemName;
                 string key = InputSettings.Instance.ThrowItem.bindings[0].path.Split('/').Last().ToUpper();
-                string[] tt = new string[itemProperties.toolTips.Length + 1];
+                int len = 1;
+                if (itemProperties.toolTips != null)
+                {
+                    len = itemProperties.toolTips.Length + 1;
+                }
+                string[] tt = new string[len];
                 if (chargingThrow.isCharging)
                 {
                     int percentage = chargingThrow.GetChargedPercentage();
