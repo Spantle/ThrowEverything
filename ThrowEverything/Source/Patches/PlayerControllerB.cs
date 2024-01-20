@@ -55,9 +55,13 @@ namespace ThrowEverything.Patches
             if (Utils.CanUseItem(__instance))
             {
                 // even though switching items will probably run this, we do it just in case of a two handed item where you cannot switch items
-                GrabbableObject item = State.GetHeldThrowable().GetItem();
-                State.ClearHeldThrowable();
-                State.SetHeldThrowable(item);
+                Throwable throwable = State.GetHeldThrowable();
+                if (throwable != null)
+                {
+                    GrabbableObject item = throwable.GetItem();
+                    State.ClearHeldThrowable();
+                    State.SetHeldThrowable(item);
+                }
             }
         }
     }
