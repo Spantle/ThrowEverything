@@ -94,7 +94,7 @@ namespace ThrowEverything.Models
             ChargingThrow chargingThrow = State.GetChargingThrow();
             GrabbableObject item = throwable.GetItem();
 
-            float m = item.transform.localScale.magnitude;
+            float m = Utils.ItemScale(item);
             preview.transform.localScale = new Vector3(m, m, m);
             preview.transform.position = Utils.GetItemThrowDestination(item, throwable.GetThrower(), chargingThrow.GetChargeDecimal());
         }

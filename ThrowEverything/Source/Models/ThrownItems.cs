@@ -21,7 +21,7 @@ namespace ThrowEverything.Models
                 return;
             }
 
-            float size = item.transform.localScale.magnitude;
+            float size = Utils.ItemScale(item);
             RaycastHit[] colliders = Physics.SphereCastAll(item.transform.position, size, item.transform.forward, 0f, 11012424, QueryTriggerInteraction.Collide);
             foreach (RaycastHit hit in colliders)
             {

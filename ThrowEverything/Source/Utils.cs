@@ -35,6 +35,11 @@ namespace ThrowEverything
             return v * powerDecimal;
         }
 
+        internal static float ItemScale(GrabbableObject __instance)
+        {
+            return __instance.transform.localScale.magnitude;
+        }
+
         internal static void DamagePlayer(PlayerControllerB player, int damage, Vector3 hitDirection, PlayerControllerB damager)
         {
             if (!player.AllowPlayerDeath() || player.inAnimationWithEnemy)
@@ -71,7 +76,7 @@ namespace ThrowEverything
             {
                 // if we collide with a wall then we make the destination the collision
                 Plugin.Logger.LogInfo("we hit a wall");
-                destination = throwRay.GetPoint(hitInfo.distance - item.originalScale.normalized.x / 2);
+                destination = throwRay.GetPoint(hitInfo.distance - ItemScale(item) / 2);
             }
             else
             {
