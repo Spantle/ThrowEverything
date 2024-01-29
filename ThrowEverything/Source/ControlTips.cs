@@ -15,14 +15,22 @@ namespace ThrowEverything
                 ChargingThrow chargingThrow = State.GetChargingThrow();
                 Item itemProperties = item.itemProperties;
 
-                string name = itemProperties.itemName;
-                string key = InputSettings.Instance.ThrowItem.bindings[0].path.Split('/').Last().ToUpper();
                 int len = 1;
                 if (itemProperties.toolTips != null)
                 {
                     len = itemProperties.toolTips.Length + 1;
+                    if (len > 3)
+                    {
+                        // the game has a total limit of 4 tooltips that can be shown
+                        // excluding the drop tooltip which is always shown by force, this means that itemProperties.toolTips can have a max of only 3
+                        // an item with 3 tooltips is the shotgun
+                        // if we try to inject our own tooltip if there's already 3/4 tooltips, one of the item's will not be shown
+                        // in this scenario we will not show the throw tooltip to avoid the item's tooltips from being hidden
+                        return;
+                    }
                 }
                 string[] tt = new string[len];
+                string name = itemProperties.itemName;
                 if (chargingThrow.isCharging)
                 {
                     int percentage = chargingThrow.GetChargedPercentage();
@@ -30,6 +38,7 @@ namespace ThrowEverything
                 }
                 else
                 {
+                    string key = InputSettings.Instance.ThrowItem.bindings[0].path.Split('/').Last().ToUpper();
                     tt[0] = $"Throw {name} : [{key}]";
                 }
 
