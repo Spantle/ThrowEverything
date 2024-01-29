@@ -69,22 +69,26 @@ namespace ThrowEverything
         {
             Ray throwRay = new(thrower.gameplayCamera.transform.position, thrower.gameplayCamera.transform.forward); // a ray from in front of the player
             RaycastHit hitInfo; // where the ray collides
-            Vector3 destination;
-            float distance = ItemPower(item, chargeDecimal, true) * 20;
-            Plugin.Logger.LogInfo($"throwing {Name(item)} ({item.itemProperties.weight}): {distance} units");
-            if (Physics.Raycast(throwRay, out hitInfo, distance, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
+            float itemDistance = ItemPower(item, chargeDecimal, true) * 20;
+            float distance;
+            if (Physics.Raycast(throwRay, out hitInfo, itemDistance, StartOfRound.Instance.collidersAndRoomMaskAndDefault))
             {
-                // if we collide with a wall then we make the destination the collision
-                Plugin.Logger.LogInfo("we hit a wall");
-                destination = throwRay.GetPoint(hitInfo.distance - ItemScale(item) / 2);
+                // if we collide with a surface then we make the destination the collision
+                Plugin.Logger.LogInfo("we hit a surface");
+                distance = hitInfo.distance;
             }
             else
             {
                 // if we don't then we go the full length
-                Plugin.Logger.LogInfo("we did not hit a wall");
-                destination = throwRay.GetPoint(distance);
+                Plugin.Logger.LogInfo("we did not hit a surface");
+                distance = itemDistance;
+                
             }
 
+            distance = Math.Max(0, distance - ItemScale(item) / 2); // we reduce the distance by the item's scale to avoid clipping into (or even through) surfaces
+            Plugin.Logger.LogInfo($"throwing {Name(item)} ({item.itemProperties.weight}): {distance} units ({itemDistance})");
+
+            Vector3 destination = throwRay.GetPoint(distance);
             return FindLandingRay(destination);
         }
 
