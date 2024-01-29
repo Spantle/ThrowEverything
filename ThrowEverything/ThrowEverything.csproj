@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>Spantle.ThrowEverything</AssemblyName>
     <Description>Adds a new ability to throw (almost) any item in Lethal Company. Throw items to deal damage, distract enemies, trigger landmines, and more!</Description>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <Product>ThrowEverything</Product>
