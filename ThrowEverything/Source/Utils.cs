@@ -37,7 +37,7 @@ namespace ThrowEverything
 
         internal static float ItemScale(GrabbableObject __instance)
         {
-            return __instance.transform.localScale.magnitude;
+            return Math.Clamp(__instance.transform.localScale.magnitude, 0.2f, 3);
         }
 
         internal static void DamagePlayer(PlayerControllerB player, int damage, Vector3 hitDirection, PlayerControllerB damager)
@@ -86,7 +86,7 @@ namespace ThrowEverything
             }
 
             distance = Math.Max(0, distance - ItemScale(item) / 2); // we reduce the distance by the item's scale to avoid clipping into (or even through) surfaces
-            Plugin.Logger.LogInfo($"throwing {Name(item)} ({item.itemProperties.weight}): {distance} units ({itemDistance})");
+            Plugin.Logger.LogInfo($"throwing {Name(item)} ({item.itemProperties.weight}): {distance} units ({itemDistance}, {ItemScale(item)})");
 
             Vector3 destination = throwRay.GetPoint(distance);
             return FindLandingRay(destination);
