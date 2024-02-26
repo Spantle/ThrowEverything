@@ -1,5 +1,9 @@
 # ThrowEverything Changelog
 
+## v0.4.1
+- Fixed a bug causing ThrowEverything to sometimes not appear in the "Remap Controls" menu
+- Updated InputUtils to v0.6.3
+
 ## v0.4.0
 - Fixed a bug causing missing tooltips when some (poorly implemented) modded scrap did not have tooltips
 - Fixed a bug preventing some items from being able to be switched from

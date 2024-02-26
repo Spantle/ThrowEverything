@@ -20,6 +20,11 @@ namespace ThrowEverything
             harmony.PatchAll(typeof(HUDManager_Patch));
             harmony.PatchAll(typeof(PlayerControllerB_Patch));
 
+            if (InputSettings.Instance.Enabled)
+            {
+                Logger.LogInfo($"InputUtils is working");
+            }
+
             Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} is loaded!");
         }
     }
